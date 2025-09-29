@@ -1,0 +1,23 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bufbuild/buf-setup-action@v1
+      - name: Generate artifacts
+        run: |
+          buf lint proto
+          buf generate proto
+      - name: Upload OpenAPI
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi
+          path: gen/openapi/**
+
+
