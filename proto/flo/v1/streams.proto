@@ -197,7 +197,7 @@ message FlushStreamResponse {
 message DeleteMessageRequest {
   string namespace = 1;
   string stream = 2;
-  string message_id = 3; // use string for REST path binding
+  bytes message_id = 3;
 }
 
 message DeleteMessageResponse {}
