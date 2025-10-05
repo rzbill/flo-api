@@ -13,4 +13,10 @@ plugins:
       - merge_file_name=flo
       - use_go_templates=true
 
+  # Python stubs (generated for release packaging; not committed)
+  - plugin: buf.build/protocolbuffers/python
+    out: gen/python/flo_api
+  - plugin: buf.build/grpc/python
+    out: gen/python/flo_api
+
 

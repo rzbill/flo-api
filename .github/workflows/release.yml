@@ -5,19 +5,31 @@ on:
       - 'v*'
 
 jobs:
-  generate:
+  build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: bufbuild/buf-setup-action@v1
-      - name: Generate artifacts
-        run: |
-          buf lint proto
-          buf generate proto
-      - name: Upload OpenAPI
-        uses: actions/upload-artifact@v4
+      - name: Generate (Go/OpenAPI/Python)
+        run: buf generate proto
+      - name: Attach OpenAPI to GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: openapi
-          path: gen/openapi/**
+          files: |
+            gen/openapi/flo.swagger.json
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Build Python wheel via Makefile
+        run: make py-wheel
+      - name: Publish to PyPI (optional)
+        if: ${{ secrets.PYPI_TOKEN != '' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+          skip-existing: true
 
 
