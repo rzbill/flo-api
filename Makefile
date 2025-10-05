@@ -1,3 +1,5 @@
+SHELL := bash
+.ONESHELL:
 .PHONY: deps lint gen clean py-wheel
 
 deps:
