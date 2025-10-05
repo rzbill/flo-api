@@ -28,10 +28,10 @@ jobs:
       - name: Build Python wheel via Makefile
         run: make py-wheel
       - name: Publish to PyPI (optional)
-        if: ${{ secrets.PYPI_TOKEN }}
+        if: ${{ env.PYPI_TOKEN != '' }}
         uses: pypa/gh-action-pypi-publish@release/v1
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         with:
-          password: ${{ secrets.PYPI_TOKEN }}
+          password: ${{ env.PYPI_TOKEN }}
           skip-existing: true
-
-
