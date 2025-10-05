@@ -14,9 +14,24 @@ py-wheel:
 	python -m pip install -U pip build
 	rm -rf dist
 	mkdir -p dist
-	@test -d gen/python/flo_api || (echo "ERROR: gen/python/flo_api not found. Run 'buf generate proto' first." && exit 1)
+	@test -d gen/python/flo_api || (echo "ERROR: gen/python/flo_api not found. Run 'buf generate proto' first." >&2; exit 1)
 	# Write a temporary pyproject at repo root and build from here
-	printf "%s" "[build-system]\nrequires = [\"setuptools>=61.0\", \"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"flo_api\"\nversion = \"0.1.0a0\"\ndescription = \"Flo API Python stubs\"\nrequires-python = \">=3.9\"\ndependencies = [\"protobuf>=4.25\", \"grpcio>=1.62\", \"googleapis-common-protos>=1.62\"]\n\n[tool.setuptools]\npackages = [\"flo_api\"]\npackage-dir = {\"\" = \"gen/python\"}\n" > pyproject.toml
+	cat > pyproject.toml <<'PY'
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flo_api"
+version = "0.1.0a0"
+description = "Flo API Python stubs"
+requires-python = ">=3.9"
+dependencies = ["protobuf>=4.25", "grpcio>=1.62", "googleapis-common-protos>=1.62"]
+
+[tool.setuptools]
+packages = ["flo_api"]
+package-dir = {"" = "gen/python"}
+PY
 	python -m build -o dist
 	rm -f pyproject.toml
 
