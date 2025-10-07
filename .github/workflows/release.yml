@@ -21,17 +21,3 @@ jobs:
           files: |
             gen/openapi/**
           fail_on_unmatched_files: true
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Build Python wheel via Makefile
-        run: make py-wheel
-      - name: Publish to PyPI (optional)
-        if: ${{ env.PYPI_TOKEN != '' }}
-        uses: pypa/gh-action-pypi-publish@release/v1
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        with:
-          password: ${{ env.PYPI_TOKEN }}
-          skip-existing: true
